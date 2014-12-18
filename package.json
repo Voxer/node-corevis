@@ -1,0 +1,30 @@
+{
+  "name": "corevis",
+  "version": "0.0.0",
+  "description": "Visualize Node.JS coredumps with HTML using mdb(1)",
+  "main": "corevis.js",
+  "dependencies": {
+    "ejs": "~1.0.0",
+    "posix-getopt": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Voxer/node-corevis.git"
+  },
+  "keywords": [
+    "coredump",
+    "mdb",
+    "node.js",
+    "postmortem"
+  ],
+  "author": "Dave Eddy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Voxer/node-corevis/issues"
+  },
+  "homepage": "https://github.com/Voxer/node-corevis"
+}
