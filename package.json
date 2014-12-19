@@ -11,6 +11,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "corevis": "./corevis.js"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/Voxer/node-corevis.git"
