@@ -123,12 +123,10 @@ function getjsstack() {
   log('getting stack trace');
   mdb.run('::jsstack -v', function(err, stdout, stderr) {
     assert.ifError(err);
-    assert.equal(stderr, '');
 
     jsstackv = cleanjsstack(stdout.trim());
     mdb.run('::jsstack', function(err, stdout, stderr) {
       assert.ifError(err);
-      assert.equal(stderr, '');
 
       jsstack = cleanjsstack(stdout.trim());
       findjsobjects();
