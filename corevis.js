@@ -121,14 +121,14 @@ var jsstack = '';
 var jsstackv = '';
 function getjsstack() {
   log('getting stack trace');
-  mdb.run('::jsstack -v', function(err, stdout, stderr) {
+  mdb.run('::jsstack -v', function(err, stdout, stderr, all) {
     assert.ifError(err);
 
-    jsstackv = cleanjsstack(stdout.trim());
-    mdb.run('::jsstack', function(err, stdout, stderr) {
+    jsstackv = cleanjsstack(all.trim());
+    mdb.run('::jsstack', function(err, stdout, stderr, all) {
       assert.ifError(err);
 
-      jsstack = cleanjsstack(stdout.trim());
+      jsstack = cleanjsstack(all.trim());
       findjsobjects();
     });
   });
@@ -202,11 +202,11 @@ function findjsobjects() {
     var addrs = Object.keys(objectmap);
     // call <addr>::jsprint -a for each addr that was found one-at-a-time
     function jsprint() {
-      mdb.run(addrs[i] + '::jsprint -a', function(err, stdout, stderr) {
+      mdb.run(addrs[i] + '::jsprint -a', function(err, stdout, stderr, all) {
         assert.ifError(err);
         // we ignore stderr as some objects may be corrupted
 
-        objects[objectmap[addrs[i]]].jsprint = stdout.trim();
+        objects[objectmap[addrs[i]]].jsprint = all.trim();
 
         if (++i === addrs.length) {
           i = 0;
