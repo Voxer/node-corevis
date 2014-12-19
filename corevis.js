@@ -295,4 +295,5 @@ function analyze() {
   mdb.child.kill();
 
   log('done. took %d seconds', (Date.now() - started) / 1000);
+  process.stderr.write('\n');
 }

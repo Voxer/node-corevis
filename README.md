@@ -9,30 +9,39 @@ Installation
 
     [sudo] npm install -g corevis
 
-Examples
---------
+Usage
+-----
+
+At Voxer, we use commands similar to the ones below to ensure that all
+core dumps go to a specific directory
+
+    mkdir /core
+    coreadm -g /core/core.%f.%p -G all -e global -d process -e global-setid -d proc-setid -I all -e log
 
 Run any of the [examples](examples) to generate a core dump, then use `corevis`
 to make an HTML file with analysis.
 
-    $ node ./examples/many-objects.js
-    pid 82310
+    [root@test1 ~/node-corevis]# node examples/big-objects.js
+    pid 9986
     Abort (core dumped)
-    $ corevis core.node.82310 > index.html
-    > loading core.node.82310
-    > getting status
-    > loading v8
-    > getting stack trace
-    > finding jsobjects (this can take a while)
-    > calling ::jsprint -a on all objects found
-    > analyzing data
-    > loading assets
-    > generating HTML
-    > killing mdb
-    > done. took 7.864 seconds
+    [root@test1 ~/node-corevis]# ./corevis.js /core/core.node.9986 > example.html
+    > loading /core/core.node.9986... 147ms
+    > getting status... 896ms
+    > loading v8... 66ms
+    > getting stack trace... 37ms
+    > finding jsobjects (this can take a while)... 13585ms
+    > calling ::jsprint -a on all objects found... 21975ms
+    > analyzing data... 631ms
+    > loading assets... 15ms
+    > generating HTML... 167ms
+    > killing mdb... 10ms
+    > done. took 37.53 seconds...
 
-Usage
------
+And see the example here
+
+http://us-east.manta.joyent.com/devops@voxer.com/public/corevis/example.html
+
+### CLI Usage
 
     Usage: corevis [options] <node coredump>
 
