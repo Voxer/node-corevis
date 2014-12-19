@@ -4,6 +4,8 @@ corevis
 Generate HTML based on information gathered with `mdb(1)` from
 a [node.js](http://nodejs.org) core dump
 
+Example: http://us-east.manta.joyent.com/devops@voxer.com/public/corevis/example.html
+
 Installation
 ------------
 
@@ -37,9 +39,6 @@ to make an HTML file with analysis.
     > killing mdb... 10ms
     > done. took 37.53 seconds...
 
-And see the example here
-
-http://us-east.manta.joyent.com/devops@voxer.com/public/corevis/example.html
 
 ### CLI Usage
 
