@@ -72,11 +72,19 @@ if (!core) {
   process.exit(1);
 }
 
-// this function should be used for all logging. it'll avoid
-// writing to stdout if no output file is given
+// this function should be used for all logging. it'll write to stderr
+// (to not interfere with the pipeline) and time each call
+var _logt;
 function log() {
-  var s = util.format('> %s', util.format.apply(util, arguments));
-  return console.error(s);
+  var now = Date.now();
+  if (_logt) {
+    var delta = now - _logt;
+    process.stderr.write(util.format('%dms\n', delta));
+  }
+  _logt = now;
+
+  var s = util.format('> %s... ', util.format.apply(util, arguments));
+  process.stderr.write(s);
 }
 
 var started = Date.now();
@@ -240,6 +248,20 @@ function findjsobjects() {
 
 function analyze() {
   log('analyzing data');
+
+  // do the equivalent of `<addr>::findjsobjects -r` for each object
+  // to determine which objects reference which
+  objects.forEach(function(object) {
+    var addr = object.addr;
+    var re = new RegExp(' ' + addr + ': ');
+    object.referencedby = [];
+    objects.forEach(function(o) {
+      if (addr === o.addr)
+        return;
+      if (o.jsprint.match(re))
+        object.referencedby.push(o.addr);
+    });
+  });
 
   // the data used when rendering the EJS template
   var data = {

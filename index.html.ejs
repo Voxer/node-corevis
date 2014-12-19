@@ -31,8 +31,11 @@ pre {
 			}
 			function linkjsprint(jsprint) {
 				return jsprint.replace(/([0-9a-f]{5,}):/g, function(match, addr) {
-					return (isintable(addr) ? (addr.link('#' + addr)) : ('<span class="not-found">'+addr+'</span>')) + ':';
+					return makelink(addr);
 				});
+			}
+			function makelink(addr) {
+				return (isintable(addr) ? (addr.link('#' + addr)) : ('<span class="not-found">'+addr+'</span>')) + ':';
 			}
 			function htmlescape(s) {
 				return $('<div/>').text(s).html();
@@ -52,7 +55,13 @@ pre {
 					$td.attr('id', addr + '::jsprint');
 
 					var $pre = $(document.createElement('pre'));
-					$pre.html(linkjsprint(htmlescape(getobject(addr).jsprint)));
+
+					var object = getobject(addr);
+					var jsprint = linkjsprint(htmlescape(object.jsprint));
+					var rby = '';
+					if (object.referencedby.length)
+						rby = 'referenced by: ' + object.referencedby.map(function(addr) { return makelink(htmlescape(addr)); }).join(', ') + '\n';
+					$pre.html(rby + jsprint);
 
 					$td.append($pre);
 					$otr.append($td);
@@ -134,8 +143,9 @@ pre {
 						</div>
 					</div>
 					<h3>Stack Trace</h3>
-					<button onclick="togglestack();">Toggle Verbosity</button>
-					<hr />
+					<p>
+						<button onclick="togglestack();">Toggle Verbosity</button>
+					</p>
 					<div id="stacktrace">
 						<pre>&gt; ::jsstack -v
 <%= jsstackv %></pre>
