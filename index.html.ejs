@@ -68,13 +68,18 @@ pre {
 			}
 
 			var $jsobjectstable;
+			var $stacktrace;
 			$(document).ready(function() {
+				$stacktrace = $('#stacktrace');
+				$stacktrace.find('pre').first().toggle();
+
+				$jsobjectstable = $('#jsobjects-table');
+
 				$('#myTab a').click(function (e) {
 					e.preventDefault();
 					$(this).tab('show');
 				});
 
-				$jsobjectstable = $('#jsobjects-table');
 				_objects.forEach(function(o) {
 					var addr = o.addr;
 
@@ -95,6 +100,10 @@ pre {
 
 				$('#table').on('sorted', addhelpercolumns);
 			});
+
+			function togglestack() {
+				$stacktrace.find('pre').toggle();
+			}
 		</script>
 	</head>
 	<body>
@@ -125,8 +134,14 @@ pre {
 						</div>
 					</div>
 					<h3>Stack Trace</h3>
-					<pre>&gt; ::jsstack -v
+					<button onclick="togglestack();">Toggle Verbosity</button>
+					<hr />
+					<div id="stacktrace">
+						<pre>&gt; ::jsstack -v
+<%= jsstackv %></pre>
+						<pre>&gt; ::jsstack
 <%= jsstack %></pre>
+					</div>
 				</div>
 				<div class="tab-pane" id="jsobjects">
 					<h2>JS Objects</h2>
@@ -151,9 +166,11 @@ var user = process.env.SUDO_USER || process.env.USER || 'unknown';
 var host = hostname || 'unknown';
 var prompt = user === 'root' ? '#' : '$';
 var cwd = process.cwd();
+var args = process.argv.join(' ');
 -%>
+<!--'-->
 					Generated with
-					<pre><%= user %>@<%= host %> <%= cwd %><%= prompt %> <%= process.argv.join(' ') %></pre>
+					<pre><%= user %>@<%= host %> <%= cwd %><%= prompt %> <%= args %></pre>
 					<h3>::findjsobjects -v</h3>
 					<table class="table table-bordered table-hover table-condensed">
 						<tr>

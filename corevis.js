@@ -109,44 +109,54 @@ function loadv8() {
   });
 }
 
-var jsstack = [];
+var jsstack = '';
+var jsstackv = '';
 function getjsstack() {
   log('getting stack trace');
   mdb.run('::jsstack -v', function(err, stdout, stderr) {
     assert.ifError(err);
     assert.equal(stderr, '');
-    var lines = stdout.trim().split('\n');
 
-    // we have to do some massaging here.
-    // mdb(1) will only output a mox of 80 columns per line if !isatty(stdin) -
-    // because of this we have to go through the stack ourself with this janky
-    // regeix algorithm to rebuild it.
-    var lastline;
-    lines.forEach(function(line) {
-      // line nmubers, positions, etc.
-      if (line.match(/^    [^ ]/)) {
-        if (lastline)
-          jsstack.push(lastline);
-        jsstack.push(line);
-        lastline = null;
-        return;
-      }
+    jsstackv = cleanjsstack(stdout.trim());
+    mdb.run('::jsstack', function(err, stdout, stderr) {
+      assert.ifError(err);
+      assert.equal(stderr, '');
 
-      // start of new function
-      if (line.match(/^ *[0-9a-f]+ /)) {
-        if (lastline)
-          jsstack.push(lastline);
-        lastline = line;
-        return;
-      }
-
-      // continuation due to 80 column limit
-      lastline += line;
+      jsstack = cleanjsstack(stdout.trim());
+      findjsobjects();
     });
-
-    jsstack = jsstack.join('\n');
-    findjsobjects();
   });
+}
+
+// mdb(1) will only output a mox of 80 columns per line if !isatty(stdout) -
+// because of this we have to go through the stack ourself with this janky
+// regex algorithm to rebuild the stack
+function cleanjsstack(jsstack) {
+  var lines = jsstack.split('\n');
+  jsstack = [];
+  var lastline;
+  lines.forEach(function(line) {
+    // line nmubers, positions, etc.
+    if (line.match(/^    [^ ]/)) {
+      if (lastline)
+        jsstack.push(lastline);
+      jsstack.push(line);
+      lastline = null;
+      return;
+    }
+
+    // start of new function
+    if (line.match(/^ *[0-9a-f]+ /)) {
+      if (lastline)
+        jsstack.push(lastline);
+      lastline = line;
+      return;
+    }
+
+    // continuation due to 80 column limit
+    lastline += line;
+  });
+  return jsstack.join('\n');
 }
 
 var debug = {};
@@ -241,6 +251,7 @@ function analyze() {
     objectmap: objectmap,
     _debug: debug,
     jsstack: jsstack,
+    jsstackv: jsstackv,
     opts: opts,
     hostname: os.hostname(),
     assets: {}
