@@ -1,10 +1,11 @@
 {
   "name": "corevis",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Visualize Node.JS coredumps with HTML using mdb(1)",
   "main": "corevis.js",
   "dependencies": {
     "ejs": "~1.0.0",
+    "latest": "^0.2.0",
     "posix-getopt": "^1.1.0"
   },
   "devDependencies": {},
