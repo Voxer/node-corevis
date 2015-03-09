@@ -100,7 +100,8 @@ function getstatus() {
   log('getting status');
   mdb.run('::status', function(err, stdout, stderr) {
     assert.ifError(err);
-    assert.equal(stderr, '');
+    if (stderr)
+      console.error(stderr);
     status = stdout.trim();
     loadv8();
   });
@@ -111,7 +112,8 @@ function loadv8() {
   log('loading v8');
   mdb.run(util.format('::load %s', opts.load), function(err, stdout, stderr) {
     assert.ifError(err);
-    assert.equal(stderr, '');
+    if (stderr)
+      console.error(stderr);
     v8so = stdout.trim();
     getjsstack();
   });
