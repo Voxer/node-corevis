@@ -20,9 +20,9 @@ pre {
 <% }); -%>
 		</script>
 		<script>
-			var _objects = <%- JSON.stringify(objects) %>;
-			var _objectmap = <%- JSON.stringify(objectmap) %>;
-			var _keys = <%- JSON.stringify(objects.map(function(o) { return o.addr; })) %>;
+			var _objects = <%- JSON.stringify(objects).replace(/\//g, '\\/') %>;
+			var _objectmap = <%- JSON.stringify(objectmap).replace(/\//g, '\\/') %>;
+			var _keys = <%- JSON.stringify(objects.map(function(o) { return o.addr; })).replace(/\//g, '\\/') %>;
 			function isintable(addr) {
 				return _keys.indexOf(addr) > -1;
 			}
