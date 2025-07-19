@@ -4,7 +4,7 @@
   "description": "Visualize Node.JS coredumps with HTML using mdb(1)",
   "main": "corevis.js",
   "dependencies": {
-    "ejs": "~1.0.0",
+    "ejs": "~3.1.10",
     "latest": "^0.2.0",
     "posix-getopt": "^1.1.0"
   },
